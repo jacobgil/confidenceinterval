@@ -2,13 +2,15 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Build Status](https://github.com/jacobgil/confidenceinterval/workflows/Tests/badge.svg)
-[![Downloads](https://static.pepy.tech/personalized-badge/confidenceinterval?period=month&units=international_system&left_color=black&right_color=brightgreen&left_text=Monthly%20Downloads)](https://pepy.tech/project/confidenceintervals)
+[![Downloads](https://static.pepy.tech/personalized-badge/confidenceinterval?period=month&units=international_system&left_color=black&right_color=brightgreen&left_text=Monthly%20Downloads)](https://pepy.tech/project/confidenceinterval)
 
 `pip install confidenceinterval`
 
 This is a package that computes common machine learning metrics like F1, and returns their confidence intervals.
 
-⭐ Very easy to use, with the standard scikit-learn naming convention and interface: e.g roc_auc_score(y_true, y_pred).
+⭐ Very easy to use, with the standard scikit-learn naming convention and interface:
+
+e.g roc_auc_score(y_true, y_pred).
 
 ⭐ Support for many metrics, with modern confidence interval methods.
 
