@@ -11,7 +11,7 @@ setuptools.setup(
     version='1.0.0',
     author='Jacob Gildenblat',
     author_email='jacob.gildenblat@gmail.com',
-    description='Confidence intervals for metrics',
+    description='Confidence Intervals in python',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/jacobgil/confidenceinterval',

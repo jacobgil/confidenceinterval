@@ -93,11 +93,14 @@ https://ieeexplore.ieee.org/document/6851192
 X. Sun and W. Xu, "Fast Implementation of DeLong’s Algorithm for Comparing the Areas Under Correlated Receiver Operating Characteristic Curves," in IEEE Signal Processing Letters, vol. 21, no. 11, pp. 1389-1393, Nov. 2014, doi: 10.1109/LSP.2014.2337313.
 
 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8936911/#APP2
+
 Confidence interval for micro-averaged F1 and macro-averaged F1 scores
 `Kanae Takahashi,1,2 Kouji Yamamoto,3 Aya Kuchiba,4,5 and Tatsuki Koyama6`
 
 B. Efron and R. J. Tibshirani, An Introduction to the Bootstrap, Chapman & Hall/CRC, Boca Raton, FL, USA (1993)
 
-Nathaniel E. Helwig, “Bootstrap Confidence Intervals”, http://users.stat.umn.edu/~helwig/notes/bootci-Notes.pdf
+http://users.stat.umn.edu/~helwig/notes/bootci-Notes.pdf
+
+`Nathaniel E. Helwig, “Bootstrap Confidence Intervals”`
 
 Bootstrapping (statistics), Wikipedia, https://en.wikipedia.org/wiki/Bootstrapping_%28statistics%29
