@@ -2,11 +2,19 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Build Status](https://github.com/jacobgil/confidenceinterval/workflows/Tests/badge.svg)
-[![Downloads](https://static.pepy.tech/personalized-badge/confidenceinterval?period=month&units=international_system&left_color=black&right_color=brightgreen&left_text=Monthly%20Downloads)](https://pepy.tech/project/confidenceinterval)
 
 `pip install confidenceinterval`
 
 This is a package that computes common machine learning metrics like F1, and returns their confidence intervals.
+
+In short, a confidence interval gives you a lower and upper bound on your metric. It's affected by the sample size, and the metric variability.
+When making decisions based on metrics, you should prefer narrow intervals. If the interval is wide, you can't be confident it's not just by luck.
+
+
+While confidence intervals are very commonly used by statisticans, with many R language implementations,
+
+it is astonishnly rarely used by python users, although python took over the data science world.  
+
 
 ⭐ Very easy to use, with the standard scikit-learn naming convention and interface:
 
