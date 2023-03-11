@@ -7,19 +7,19 @@
 
 This is a package that computes common machine learning metrics like F1, and returns their confidence intervals.
 
-⭐ Very easy to use, with the standard scikit-learn naming convention and interface:
 
-e.g roc_auc_score(y_true, y_pred).
+⭐ Very easy to use, with the standard scikit-learn naming convention and interface.
 
 ⭐ Support for many metrics, with modern confidence interval methods.
 
-⭐ Support for both analytical computation of the confidence intervals, and bootstrapping.
+⭐ Support for both analytical computation of the confidence intervals, and bootstrapping methods.
 
 ⭐ East to use interface to compute confidence intervals on new metrics that don't appear here, with bootstrapping.
 
 ## The motivation
 
-A confidence interval gives you a lower and upper bound on your metric. It's affected by the sample size, and the metric variability.
+A confidence interval gives you a lower and upper bound on your metric. It's affected by the sample size, and by how sensitive the metric is to changes in the data.
+
 When making decisions based on metrics, you should prefer narrow intervals. If the interval is wide, you can't be confident that your high performing metric is not just by luck.
 
 While confidence intervals are commonly used by statisticans, with many great R language implementations,
@@ -36,15 +36,23 @@ auc, ci = roc_auc_score(y_true, y_pred, confidence_level=0.95)
 auc, ci = roc_auc_score(y_true, y_pred, confidence_level=0.95, method='bootstrap_bca')
 ```
 
+## All methods do an analytical computation by default, but can do bootsrapping instead
 By default all the methods return an analytical computation of the confidence interval (CI).
-For a bootstrap computation of the CI, for any of the methods belonw, you can just specify method='bootstrap_bca', or method='bootstrap_percentile' or method='bootstrap_basic'.
 
-## Supported methods
+For a bootstrap computation of the CI for any of the methods belonw, just specify method='bootstrap_bca', or method='bootstrap_percentile' or method='bootstrap_basic'.
+These are different ways of doing the bootstrapping, but method='bootstrap_bca' is the generalibly reccomended method.
 
-### Get a confidence interval for any external metric
-With the bootstrap_ci method, you can get the CI for a an external metric method.
-As an example, lets get the CI for the balanced accuracy metric. It's not implemented yet in this package,
-but we can easily get the CI for it:
+You can also pass the number of bootstrap resamples (n_resamples), and a random generator for controling the reproducability:
+
+```python
+random_state = np.random.default_rng()
+n_resamples=9999
+```
+
+## Get a confidence interval for any external metric with Bootstrapping
+With the bootstrap_ci method, you can get the CI for any metric function that gets y_true and y_pred as arguments.
+
+As an example, lets get the CI for the balanced accuracy metric from scikit-learn.
 
 ```python
 from confidenceinterval.bootstrap import bootstrap_ci
@@ -59,7 +67,7 @@ bootstrap_ci(y_true=y_true,
              random_state=random_generator)
 ```
 
-### F1, Precision, Recall (with Macro and Micro averaging)
+## F1, Precision, Recall (with Macro and Micro averaging)
 ```python
 from confidence interval import precision_score, recall_score, f1_score
 ```
@@ -69,17 +77,21 @@ These methods also accept average='micro' or average='macro'.
 The analytical computation here is using the (amazing) 2022 paper of Takahashi et al (reference below). 
 
 
-### ROC AUC
+## ROC AUC
 ```python
 from confidence interval import roc_auc_score
 ```
 The analytical computation here is a fast implementation of the DeLong method.
 
 
-### Binary metrics
+## Binary metrics
 ```python
-from confidence interval import accuracy_score, ppv_score, npv_score,
-                                tpr_score, fpr_score, tnr_score
+from confidence interval import accuracy_score,
+                                ppv_score,
+                                npv_score,
+                                tpr_score,
+                                fpr_score,
+                                tnr_score
 ```
 
 For these methods, the confidence interval is estimated by treating the ratio as a binomial proportion,
@@ -91,7 +103,7 @@ method can be one of ['wilson', 'normal', 'agresti_coull', 'beta', 'jeffreys', '
 
 ----------
 
-### References
+## References
 
 The binomial confidence interval computation uses the statsmodels package:
 https://www.statsmodels.org/dev/generated/statsmodels.stats.proportion.proportion_confint.html
