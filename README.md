@@ -7,15 +7,6 @@
 
 This is a package that computes common machine learning metrics like F1, and returns their confidence intervals.
 
-In short, a confidence interval gives you a lower and upper bound on your metric. It's affected by the sample size, and the metric variability.
-When making decisions based on metrics, you should prefer narrow intervals. If the interval is wide, you can't be confident it's not just by luck.
-
-
-While confidence intervals are very commonly used by statisticans, with many R language implementations,
-
-it is astonishnly rarely used by python users, although python took over the data science world.  
-
-
 ⭐ Very easy to use, with the standard scikit-learn naming convention and interface:
 
 e.g roc_auc_score(y_true, y_pred).
@@ -25,6 +16,17 @@ e.g roc_auc_score(y_true, y_pred).
 ⭐ Support for both analytical computation of the confidence intervals, and bootstrapping.
 
 ⭐ East to use interface to compute confidence intervals on new metrics that don't appear here, with bootstrapping.
+
+## The motivation
+
+A confidence interval gives you a lower and upper bound on your metric. It's affected by the sample size, and the metric variability.
+When making decisions based on metrics, you should prefer narrow intervals. If the interval is wide, you can't be confident that your high performing metric is not just by luck.
+
+While confidence intervals are commonly used by statisticans, with many great R language implementations,
+it is astonishingly rarely used by python users, although python took over the data science world !
+
+Part of this is because there were no simple to use python packages for this.
+
 
 ## Getting started
 
