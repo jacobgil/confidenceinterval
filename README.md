@@ -9,8 +9,11 @@
 This is a package that computes common machine learning metrics like F1, and returns their confidence intervals.
 
 ⭐ Very easy to use, with the standard scikit-learn naming convention and interface: e.g roc_auc_score(y_true, y_pred).
+
 ⭐ Support for many metrics, with modern confidence interval methods.
+
 ⭐ Support for both analytical computation of the confidence intervals, and bootstrapping.
+
 ⭐ East to use interface to compute confidence intervals on new metrics that don't appear here, with bootstrapping.
 
 ## Getting started
@@ -18,7 +21,7 @@ This is a package that computes common machine learning metrics like F1, and ret
 ```python
 from confidenceinterval import roc_auc_score
 auc, ci = roc_auc_score(y_true, y_pred, confidence_level=0.95)
-auc, ci = roc_auc_score(y_true, y_pred, confidence_level=0.95, method='bootstrap_bca)
+auc, ci = roc_auc_score(y_true, y_pred, confidence_level=0.95, method='bootstrap_bca')
 ```
 
 By default all the methods return an analytical computation of the confidence interval (CI).
@@ -50,6 +53,7 @@ from confidence interval import precision_score, recall_score, f1_score
 ```
 
 These methods also accept average='micro' or average='macro'.
+
 The analytical computation here is using the (amazing) 2022 paper of Takahashi et al (reference below). 
 
 
@@ -66,14 +70,16 @@ from confidence interval import accuracy_score, ppv_score, npv_score,
                                 tpr_score, fpr_score, tnr_score
 ```
 
-For these methods, the confidence interval is estimated by treating the ratio as a binomial proportion, see the (wiki page)[https://en.wikipedia.org/wiki/Binomial_proportion_confidence_interval].
+For these methods, the confidence interval is estimated by treating the ratio as a binomial proportion,
+see the [wiki page](https://en.wikipedia.org/wiki/Binomial_proportion_confidence_interval).
+
 By default method='wilson', the wilson interval, which behaves better for smaller samples.
+
 method can be one of ['wilson', 'normal', 'agresti_coull', 'beta', 'jeffreys', 'binom_test'], or one of the boostrap methods.
 
 ----------
 
-
-### References and attributions
+### References
 
 The binomial confidence interval computation uses the statsmodels package:
 https://www.statsmodels.org/dev/generated/statsmodels.stats.proportion.proportion_confint.html
