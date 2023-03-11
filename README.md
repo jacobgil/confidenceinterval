@@ -23,7 +23,7 @@ A confidence interval gives you a lower and upper bound on your metric. It's aff
 When making decisions based on metrics, you should prefer narrow intervals. If the interval is wide, you can't be confident that your high performing metric is not just by luck.
 
 While confidence intervals are commonly used by statisticans, with many great R language implementations,
-it is astonishingly rarely used by python users, although python took over the data science world !
+they are astonishingly rarely used by python users, although python took over the data science world !
 
 Part of this is because there were no simple to use python packages for this.
 
