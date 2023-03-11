@@ -122,7 +122,7 @@ Confidence interval for micro-averaged F1 and macro-averaged F1 scores
 B. Efron and R. J. Tibshirani, An Introduction to the Bootstrap, Chapman & Hall/CRC, Boca Raton, FL, USA (1993)
 
 http://users.stat.umn.edu/~helwig/notes/bootci-Notes.pdf
-
 `Nathaniel E. Helwig, “Bootstrap Confidence Intervals”`
+
 
 Bootstrapping (statistics), Wikipedia, https://en.wikipedia.org/wiki/Bootstrapping_%28statistics%29
