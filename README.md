@@ -108,7 +108,7 @@ method can be one of ['wilson', 'normal', 'agresti_coull', 'beta', 'jeffreys', '
 The binomial confidence interval computation uses the statsmodels package:
 https://www.statsmodels.org/dev/generated/statsmodels.stats.proportion.proportion_confint.html
 
-Yandex data schhol implementation of the fast delong method:
+Yandex data school implementation of the fast delong method:
 https://github.com/yandexdataschool/roc_comparison
 
 https://ieeexplore.ieee.org/document/6851192
