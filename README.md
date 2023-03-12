@@ -14,7 +14,7 @@ This is a package that computes common machine learning metrics like F1, and ret
 
 ⭐ Support for both analytical computation of the confidence intervals, and bootstrapping methods.
 
-⭐ East to use interface to compute confidence intervals on new metrics that don't appear here, with bootstrapping.
+⭐ Easy to use interface to compute confidence intervals on new metrics that don't appear here, with bootstrapping.
 
 ## The motivation
 
@@ -34,6 +34,7 @@ Part of this is because there were no simple to use python packages for this.
 from confidenceinterval import roc_auc_score
 auc, ci = roc_auc_score(y_true, y_pred, confidence_level=0.95)
 auc, ci = roc_auc_score(y_true, y_pred, confidence_level=0.95, method='bootstrap_bca')
+auc, ci = roc_auc_score(y_true, y_pred, confidence_level=0.95, method='bootstrap_percentile', n_resamples=5000)
 ```
 
 ## All methods do an analytical computation by default, but can do bootsrapping instead
@@ -92,6 +93,12 @@ from confidence interval import accuracy_score,
                                 tpr_score,
                                 fpr_score,
                                 tnr_score
+# Wilson is used by default:
+ppv, ci = ppv_score(y_true, y_pred, confidence_level=0.95)
+ppv, ci = ppv_score(y_true, y_pred, confidence_level=0.95, method='jeffreys')
+ppv, ci = ppv_score(y_true, y_pred, confidence_level=0.95, method='agresti_coull')
+ppv, ci = ppv_score(y_true, y_pred, confidence_level=0.95, method='bootstrap_bca')
+
 ```
 
 For these methods, the confidence interval is estimated by treating the ratio as a binomial proportion,
