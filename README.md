@@ -1,5 +1,5 @@
 # The long missing python library for confidence intervals
-[logo](logo.png)
+![logo](logo.png)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Build Status](https://github.com/jacobgil/confidenceinterval/workflows/Tests/badge.svg)
