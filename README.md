@@ -135,6 +135,7 @@ bootstrap_ci(y_true=y_true,
 Citation
 If you use this for research, please cite. Here is an example BibTeX entry:
 
+```
 @misc{jacobgildenblatconfidenceinterval,
   title={A python library for confidence intervals},
   author={Jacob Gildenblat},
@@ -142,6 +143,7 @@ If you use this for research, please cite. Here is an example BibTeX entry:
   publisher={GitHub},
   howpublished={\url{https://github.com/jacobgil/confidenceinterval}},
 }
+```
 
 ----------
 
