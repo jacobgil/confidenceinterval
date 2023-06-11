@@ -47,8 +47,20 @@ from confidence interval import accuracy_score,
                                 tnr_score
 from confidenceinterval.bootstrap import bootstrap_ci
 
-# Example usage:
-auc, ci = roc_auc_score(y_true, y_pred, confidence_level=0.95, method='bootstrap_bca', n_resamples=5000)
+
+# Analytic CI:
+auc, ci = roc_auc_score(y_true,
+                        y_pred,
+                        confidence_level=0.95)
+# Bootstrap CI:
+auc, ci = roc_auc_score(y_true,
+                        y_pred,
+                        confidence_level=0.95,
+                        method='bootstrap_bca',
+                        n_resamples=5000)
+
+
+
 ```
 
 ## All methods do an analytical computation by default, but can do bootsrapping instead
@@ -64,7 +76,7 @@ random_state = np.random.default_rng()
 n_resamples=9999
 ```
 
-## Support for binary, macro and micro averagin for F1, Precision and Recall.
+## Support for binary, macro and micro averaging for F1, Precision and Recall.
 ```python
 from confidence interval import precision_score, recall_score, f1_score
 binary_f1, ci = f1_score(y_true, y_pred, confidence_interval=0.95, average='binary')
@@ -74,11 +86,9 @@ bootstrap_binary_f1, ci = f1_score(y_true, y_pred, confidence_interval=0.95, ave
 
 ```
 
-These methods also accept average='micro' or average='macro', or 'binary'.
-
 The analytical computation here is using the (amazing) 2022 paper of Takahashi et al (reference below).
-
-The paper derived recall and precision only for micro. We derive the recall and precision confidence intervals for macro F1 as well using the delta method.
+The paper derived recall and precision only for micro averaging.
+We derive the recall and precision confidence intervals for macro F1 as well using the delta method.
 
 
 ## ROC AUC
