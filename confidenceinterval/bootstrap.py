@@ -1,6 +1,6 @@
 from scipy.stats import bootstrap
 import numpy as np
-from typing import List, Callable, Optional, Tuple, TypedDict
+from typing import List, Callable, Optional, Tuple
 
 bootstrap_methods = [
     'bootstrap_bca',
@@ -8,7 +8,7 @@ bootstrap_methods = [
     'bootstrap_basic']
 
 
-class BootstrapParams(TypedDict):
+class BootstrapParams:
     n_resamples: int
     random_state: Optional[np.random.RandomState]
 
