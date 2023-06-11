@@ -1,13 +1,16 @@
+""" Confidence intervals for common binary metrics."""
+
 from ast import Call
 import statsmodels
 from statsmodels.stats.proportion import proportion_confint
-from typing import List, Callable, Tuple, Union
+from typing import List, Callable, Tuple, Union, Optional
+from typing_extensions import Unpack
 from functools import partial
 import numpy as np
 from confidenceinterval.utils import get_positive_negative_counts
-from confidenceinterval.bootstrap import bootstrap_ci, bootstrap_methods
+from confidenceinterval.bootstrap import bootstrap_ci, bootstrap_methods, BootstrapParams
 
-proportion_conf_methods = [
+proportion_conf_methods: List[str] = [
     'wilson',
     'normal',
     'agresti_coull',
@@ -16,18 +19,36 @@ proportion_conf_methods = [
     'binom_test']
 
 
-def accuracy_score_binomial_ci(y_true: List,
-                               y_pred: List,
-                               confidence_level: int = 0.95,
+def accuracy_score_binomial_ci(y_true: List[int],
+                               y_pred: List[int],
+                               confidence_level: float = 0.95,
                                method: str = 'wilson',
-                               compute_ci=True
-                               ) -> Union[float, Tuple[float, float]]:
-    """ Compute the accuracy score and the confidence interval.
+                               compute_ci: bool = True
+                               ) -> Union[float, Tuple[float, Tuple[float, float]]]:
+    """Compute the accuracy score and the confidence interval.
         The confidence interval is computed as a binomial proportion,
         for more information see
         https://www.statsmodels.org/devel/generated/statsmodels.stats.proportion.proportion_confint.html
 
+    Parameters
+    ----------
+    y_true : List[int]
+        The grount truth labels.
+    y_pred : List[int]
+        The predicted categories.
+    confidence_level : float, optional
+        The confidence interval level, by default 0.95
+    method : str, optional
+        The method for the stats model proportion method, by default 'wilson'
+    compute_ci : bool, optional
+        If true return the confidence interval as well as the accuract score, by default True
+
+    Returns
+    -------
+    Union[float, Tuple[float, Tuple[float, float]]]
+        The accuracy score and optionally the confidence interval.
     """
+
     assert method in proportion_conf_methods, f'Proportion CI method {method} not in {proportion_conf_methods}'
     assert 0 <= confidence_level <= 1, f'confidence_level has to be between 0 and 1 but is {confidence_level}'
 
@@ -37,20 +58,44 @@ def accuracy_score_binomial_ci(y_true: List,
         interval = proportion_confint(
             correct,
             len(y_pred),
-            alpha=1 -
-            confidence_level,
+            alpha=1 - confidence_level,
             method=method)
         return acc, interval
     else:
         return acc
 
 
-def accuracy_score_bootstrap(y_true: List,
-                             y_pred: List,
-                             confidence_level: int = 0.95,
+def accuracy_score_bootstrap(y_true: List[int],
+                             y_pred: List[int],
+                             confidence_level: float = 0.95,
                              method: str = 'bootstrap_bca',
                              n_resamples: int = 9999,
-                             random_state: Callable = None) -> Tuple[float, float]:
+                             random_state: Optional[np.random.RandomState] = None) -> Tuple[float, Tuple[float, float]]:
+    """Compute the accuray score confidence interval using the bootstrap method.
+
+    Parameters
+    ----------
+    y_true : List[int]
+        The grount truth labels.
+    y_pred : List[int]
+        The predicted categories.
+    confidence_level : float, optional
+        The confidence interval level , by default 0.95
+    method : str, optional
+        The bootstrapping method, by default 'bootstrap_bca'
+    method : str, optional
+        The bootstrap method, by default 'bootstrap_bca'
+    n_resamples : int, optional
+        The number of bootstrap resamples, by default 9999
+    random_state : Optional[np.random.RandomState], optional
+        The random state for reproducability, by default None
+
+    Returns
+    -------
+    Union[float, Tuple[float, Tuple[float, float]]]
+        The accuracy score and the confidence interval.
+    """
+
     accuracy_score_no_ci = partial(
         accuracy_score_binomial_ci,
         compute_ci=False)
@@ -63,24 +108,45 @@ def accuracy_score_bootstrap(y_true: List,
                         random_state=random_state)
 
 
-def accuracy_score(y_true: List,
-                   y_pred: List,
-                   confidence_level: int = 0.95,
+def accuracy_score(y_true: List[int],
+                   y_pred: List[int],
+                   confidence_level: float = 0.95,
                    method: str = 'wilson',
-                   *args, **kwargs) -> Union[float, Tuple[float, float]]:
+                   compute_ci: bool = True,
+                   **kwargs: Unpack[BootstrapParams]) -> Union[float, Tuple[float, Tuple[float, float]]]:
+    """
+        Compute the accuracy score and optionally the confidence interval.
+        Parameters
+        ----------
+        y_true : List[int]
+            The grount truth labels.
+        y_pred : List[int]
+            The predicted categories.
+        confidence_level : float, optional
+            The confidence interval level, by default 0.95
+        method : str, optional
+            The method for the stats model proportion method, by default 'wilson'
+        compute_ci : bool, optional
+            If true return the confidence interval as well as the accuract score, by default True
+
+        Returns
+        -------
+        Union[float, Tuple[float, Tuple[float, float]]]
+            The accuracy score and optionally the confidence interval.
+    """
     if method in bootstrap_methods:
         return accuracy_score_bootstrap(
-            y_true, y_pred, confidence_level, method, *args, **kwargs)
+            y_true, y_pred, confidence_level, method, **kwargs)
     else:
         return accuracy_score_binomial_ci(
-            y_true, y_pred, confidence_level, method, *args, **kwargs)
+            y_true, y_pred, confidence_level, method, compute_ci)
 
 
-def ppv_score_binomial_ci(y_true: List,
-                          y_pred: List,
-                          confidence_level: int = 0.95,
+def ppv_score_binomial_ci(y_true: List[int],
+                          y_pred: List[int],
+                          confidence_level: float = 0.95,
                           method: str = 'wilson',
-                          compute_ci=True) -> Union[float, Tuple[float, float]]:
+                          compute_ci: bool = True) -> Union[float, Tuple[float, Tuple[float, float]]]:
 
     assert method in proportion_conf_methods, f'Proportion CI method {method} not in {proportion_conf_methods}'
     assert 0 <= confidence_level <= 1, f'confidence_level has to be between 0 and 1 but is {confidence_level}'
@@ -101,12 +167,12 @@ def ppv_score_binomial_ci(y_true: List,
         return result
 
 
-def ppv_score_bootstrap(y_true: List,
-                        y_pred: List,
-                        confidence_level: int = 0.95,
+def ppv_score_bootstrap(y_true: List[int],
+                        y_pred: List[int],
+                        confidence_level: float = 0.95,
                         method: str = 'bootstrap_bca',
                         n_resamples: int = 9999,
-                        random_state: Callable = None) -> Tuple[float, float]:
+                        random_state: Optional[np.random.RandomState] = None) -> Union[float, Tuple[float, Tuple[float, float]]]:
     ppv_score_no_ci = partial(ppv_score_binomial_ci, compute_ci=False)
     return bootstrap_ci(y_true=y_true,
                         y_pred=y_pred,
@@ -117,24 +183,25 @@ def ppv_score_bootstrap(y_true: List,
                         random_state=random_state)
 
 
-def ppv_score(y_true: List,
-              y_pred: List,
-              confidence_level: int = 0.95,
+def ppv_score(y_true: List[int],
+              y_pred: List[int],
+              confidence_level: float = 0.95,
               method: str = 'wilson',
-              *args, **kwargs) -> Union[float, Tuple[float, float]]:
+              compute_ci: bool = True,
+              **kwargs: Unpack[BootstrapParams]) -> Union[float, Tuple[float, Tuple[float, float]]]:
     if method in bootstrap_methods:
         return ppv_score_bootstrap(
-            y_true, y_pred, confidence_level, method, *args, **kwargs)
+            y_true, y_pred, confidence_level, method, **kwargs)
     else:
         return ppv_score_binomial_ci(
-            y_true, y_pred, confidence_level, method, *args, **kwargs)
+            y_true, y_pred, confidence_level, method, compute_ci)
 
 
-def npv_score_binomial_ci(y_true: List,
-                          y_pred: List,
-                          confidence_level: int = 0.95,
+def npv_score_binomial_ci(y_true: List[int],
+                          y_pred: List[int],
+                          confidence_level: float = 0.95,
                           method: str = 'wilson',
-                          compute_ci=True) -> Union[float, Tuple[float, float]]:
+                          compute_ci=True) -> Union[float, Tuple[float, Tuple[float, float]]]:
 
     assert method in proportion_conf_methods, f'Proportion CI method {method} not in {proportion_conf_methods}'
     assert 0 <= confidence_level <= 1, f'confidence_level has to be between 0 and 1 but is {confidence_level}'
@@ -155,12 +222,12 @@ def npv_score_binomial_ci(y_true: List,
         return result
 
 
-def npv_score_bootstrap(y_true: List,
-                        y_pred: List,
-                        confidence_level: int = 0.95,
+def npv_score_bootstrap(y_true: List[int],
+                        y_pred: List[int],
+                        confidence_level: float = 0.95,
                         method: str = 'bootstrap_bca',
                         n_resamples: int = 9999,
-                        random_state: Callable = None) -> Tuple[float, float]:
+                        random_state: Optional[np.random.RandomState] = None) -> Union[float, Tuple[float, Tuple[float, float]]]:
     npv_score_no_ci = partial(npv_score_binomial_ci, compute_ci=False)
     return bootstrap_ci(y_true=y_true,
                         y_pred=y_pred,
@@ -171,24 +238,25 @@ def npv_score_bootstrap(y_true: List,
                         random_state=random_state)
 
 
-def npv_score(y_true: List,
-              y_pred: List,
-              confidence_level: int = 0.95,
+def npv_score(y_true: List[int],
+              y_pred: List[int],
+              confidence_level: float = 0.95,
               method: str = 'wilson',
-              *args, **kwargs) -> Union[float, Tuple[float, float]]:
+              compute_ci: bool = True,
+              **kwargs: Unpack[BootstrapParams]) -> Union[float, Tuple[float, Tuple[float, float]]]:
     if method in bootstrap_methods:
         return npv_score_bootstrap(
-            y_true, y_pred, confidence_level, method, *args, **kwargs)
+            y_true, y_pred, confidence_level, method, **kwargs)
     else:
         return npv_score_binomial_ci(
-            y_true, y_pred, confidence_level, method, *args, **kwargs)
+            y_true, y_pred, confidence_level, method, compute_ci)
 
 
-def tpr_score_binomial_ci(y_true: List,
-                          y_pred: List,
-                          confidence_level: int = 0.95,
+def tpr_score_binomial_ci(y_true: List[int],
+                          y_pred: List[int],
+                          confidence_level: float = 0.95,
                           method: str = 'wilson',
-                          compute_ci=True) -> Union[float, Tuple[float, float]]:
+                          compute_ci=True) -> Union[float, Tuple[float, Tuple[float, float]]]:
 
     assert method in proportion_conf_methods, f'Proportion CI method {method} not in {proportion_conf_methods}'
     assert 0 <= confidence_level <= 1, f'confidence_level has to be between 0 and 1 but is {confidence_level}'
@@ -209,12 +277,12 @@ def tpr_score_binomial_ci(y_true: List,
         return result
 
 
-def tpr_score_bootstrap(y_true: List,
-                        y_pred: List,
-                        confidence_level: int = 0.95,
+def tpr_score_bootstrap(y_true: List[int],
+                        y_pred: List[int],
+                        confidence_level: float = 0.95,
                         method: str = 'bootstrap_bca',
                         n_resamples: int = 9999,
-                        random_state: Callable = None) -> Tuple[float, float]:
+                        random_state: Optional[np.random.RandomState] = None) -> Tuple[float, Tuple[float, float]]:
     tpr_score_no_ci = partial(tpr_score_binomial_ci, compute_ci=False)
     return bootstrap_ci(y_true=y_true,
                         y_pred=y_pred,
@@ -225,25 +293,25 @@ def tpr_score_bootstrap(y_true: List,
                         random_state=random_state)
 
 
-def tpr_score(y_true: List,
-              y_pred: List,
-              confidence_level: int = 0.95,
+def tpr_score(y_true: List[int],
+              y_pred: List[int],
+              confidence_level: float = 0.95,
               method: str = 'wilson',
-              *args,
-              **kwargs) -> Union[float, Tuple[float, float]]:
+              compute_ci: bool = True,
+              **kwargs: Unpack[BootstrapParams]) -> Union[float, Tuple[float, Tuple[float, float]]]:
     if method in bootstrap_methods:
         return tpr_score_bootstrap(
-            y_true, y_pred, confidence_level, method, *args, **kwargs)
+            y_true, y_pred, confidence_level, method, **kwargs)
     else:
         return tpr_score_binomial_ci(
-            y_true, y_pred, confidence_level, method, *args, **kwargs)
+            y_true, y_pred, confidence_level, method, compute_ci=compute_ci)
 
 
-def fpr_score_binomial_ci(y_true: List,
-                          y_pred: List,
-                          confidence_level: int = 0.95,
+def fpr_score_binomial_ci(y_true: List[int],
+                          y_pred: List[int],
+                          confidence_level: float = 0.95,
                           method: str = 'wilson',
-                          compute_ci=True) -> Union[float, Tuple[float, float]]:
+                          compute_ci=True) -> Union[float, Tuple[float, Tuple[float, float]]]:
 
     assert method in proportion_conf_methods, f'Proportion CI method {method} not in {proportion_conf_methods}'
     assert 0 <= confidence_level <= 1, f'confidence_level has to be between 0 and 1 but is {confidence_level}'
@@ -264,12 +332,12 @@ def fpr_score_binomial_ci(y_true: List,
         return result
 
 
-def fpr_score_bootstrap(y_true: List,
-                        y_pred: List,
-                        confidence_level: int = 0.95,
+def fpr_score_bootstrap(y_true: List[int],
+                        y_pred: List[int],
+                        confidence_level: float = 0.95,
                         method: str = 'bootstrap_bca',
                         n_resamples: int = 9999,
-                        random_state: Callable = None) -> Tuple[float, float]:
+                        random_state: Optional[np.random.RandomState] = None) -> Union[float, Tuple[float, Tuple[float, float]]]:
     fpr_score_no_ci = partial(fpr_score_binomial_ci, compute_ci=False)
     return bootstrap_ci(y_true=y_true,
                         y_pred=y_pred,
@@ -280,25 +348,25 @@ def fpr_score_bootstrap(y_true: List,
                         random_state=random_state)
 
 
-def fpr_score(y_true: List,
-              y_pred: List,
-              confidence_level: int = 0.95,
+def fpr_score(y_true: List[int],
+              y_pred: List[int],
+              confidence_level: float = 0.95,
               method: str = 'wilson',
-              *args,
-              **kwargs) -> Union[float, Tuple[float, float]]:
+              compute_ci: bool = True,
+              **kwargs: Unpack[BootstrapParams]) -> Union[float, Tuple[float, Tuple[float, float]]]:
     if method in bootstrap_methods:
         return fpr_score_bootstrap(
-            y_true, y_pred, confidence_level, method, *args, **kwargs)
+            y_true=y_true, y_pred=y_pred, confidence_level=confidence_level, method=method, **kwargs)
     else:
         return fpr_score_binomial_ci(
-            y_true, y_pred, confidence_level, method, *args, **kwargs)
+            y_true=y_true, y_pred=y_pred, confidence_level=confidence_level, method=method, compute_ci=compute_ci)
 
 
-def tnr_score_binomial_ci(y_true: List,
-                          y_pred: List,
-                          confidence_level: int = 0.95,
+def tnr_score_binomial_ci(y_true: List[int],
+                          y_pred: List[int],
+                          confidence_level: float = 0.95,
                           method: str = 'wilson',
-                          compute_ci=True) -> Union[float, Tuple[float, float]]:
+                          compute_ci: bool = True) -> Union[float, Tuple[float, Tuple[float, float]]]:
 
     assert method in proportion_conf_methods, f'Proportion CI method {method} not in {proportion_conf_methods}'
     assert 0 <= confidence_level <= 1, f'confidence_level has to be between 0 and 1 but is {confidence_level}'
@@ -319,12 +387,12 @@ def tnr_score_binomial_ci(y_true: List,
         return result
 
 
-def tnr_score_bootstrap(y_true: List,
-                        y_pred: List,
-                        confidence_level: int = 0.95,
+def tnr_score_bootstrap(y_true: List[int],
+                        y_pred: List[int],
+                        confidence_level: float = 0.95,
                         method: str = 'bootstrap_bca',
                         n_resamples: int = 9999,
-                        random_state: Callable = None) -> Tuple[float, float]:
+                        random_state: Optional[np.random.RandomState] = None) -> Union[float, Tuple[float, Tuple[float, float]]]:
     tnr_score_no_ci = partial(tnr_score_binomial_ci, compute_ci=False)
     return bootstrap_ci(y_true=y_true,
                         y_pred=y_pred,
@@ -335,15 +403,15 @@ def tnr_score_bootstrap(y_true: List,
                         random_state=random_state)
 
 
-def tnr_score(y_true: List,
-              y_pred: List,
-              confidence_level: int = 0.95,
+def tnr_score(y_true: List[int],
+              y_pred: List[int],
+              confidence_level: float = 0.95,
               method: str = 'wilson',
-              *args,
-              **kwargs) -> Union[float, Tuple[float, float]]:
+              compute_ci: bool = True,
+              **kwargs: Unpack[BootstrapParams]) -> Union[float, Tuple[float, Tuple[float, float]]]:
     if method in bootstrap_methods:
         return tnr_score_bootstrap(
-            y_true, y_pred, confidence_level, method, *args, **kwargs)
+            y_true=y_true, y_pred=y_pred, confidence_level=confidence_level, method=method, **kwargs)
     else:
         return tnr_score_binomial_ci(
-            y_true, y_pred, confidence_level, method, *args, **kwargs)
+            y_true=y_true, y_pred=y_pred, confidence_level=confidence_level, method=method, compute_ci=compute_ci)

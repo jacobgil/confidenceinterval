@@ -1,6 +1,6 @@
 from scipy.stats import bootstrap
 import numpy as np
-from typing import List, Callable
+from typing import List, Callable, Optional, Tuple, TypedDict
 
 bootstrap_methods = [
     'bootstrap_bca',
@@ -8,13 +8,18 @@ bootstrap_methods = [
     'bootstrap_basic']
 
 
-def bootstrap_ci(y_true: List,
-                 y_pred: List,
+class BootstrapParams(TypedDict):
+    n_resamples: int
+    random_state: Optional[np.random.RandomState]
+
+
+def bootstrap_ci(y_true: List[int],
+                 y_pred: List[int],
                  metric: Callable,
-                 confidence_level: int = 0.95,
-                 n_resamples=9999,
-                 method='bootstrap_bca',
-                 random_state=None):
+                 confidence_level: float = 0.95,
+                 n_resamples: int = 9999,
+                 method: str = 'bootstrap_bca',
+                 random_state: Optional[np.random.RandomState] = None) -> Tuple[float, Tuple[float, float]]:
 
     def statistic(*indices):
         indices = np.array(indices)[0, :]

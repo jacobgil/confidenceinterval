@@ -8,7 +8,7 @@ with open("requirements.txt", "r") as f:
 
 setuptools.setup(
     name='confidenceinterval',
-    version='1.0.0',
+    version='1.0.1',
     author='Jacob Gildenblat',
     author_email='jacob.gildenblat@gmail.com',
     description='Confidence Intervals in python',

@@ -9,7 +9,7 @@ from confidenceinterval.bootstrap import bootstrap_ci, bootstrap_methods
 
 def roc_auc_score_bootstrap(y_true: List,
                             y_pred: List,
-                            confidence_level: int = 0.95,
+                            confidence_level: float = 0.95,
                             method: str = 'bootstrap_bca',
                             n_resamples: int = 9999,
                             random_state: Callable = None) -> Tuple[float, float]:
@@ -24,7 +24,7 @@ def roc_auc_score_bootstrap(y_true: List,
 
 def roc_auc_score(y_true: List,
                   y_pred: List,
-                  confidence_level: int = 0.95,
+                  confidence_level: float = 0.95,
                   method: str = 'delong',
                   *args, **kwargs) -> Tuple[float, float]:
     assert method in [
