@@ -3,7 +3,6 @@
 """
 
 from typing import List, Callable, Tuple, Union, Optional
-from typing_extensions import Unpack
 
 from functools import partial
 import numpy as np
@@ -163,7 +162,7 @@ def precision_score(y_true: List[int],
                     average: str = 'micro',
                     method: str = 'takahashi',
                     compute_ci: bool = True,
-                    **kwargs: Unpack[BootstrapParams]) -> Union[float, Tuple[float, Tuple[float, float]]]:
+                    **kwargs) -> Union[float, Tuple[float, Tuple[float, float]]]:
     """Return the precision score. Supports micro/binary precision methods.
 
     Parameters
@@ -346,7 +345,7 @@ def recall_score(y_true: List[int],
                  average: str = 'micro',
                  method: str = 'takahashi',
                  compute_ci: bool = True,
-                 **kwargs: Unpack[BootstrapParams]) -> Union[float, Tuple[float, Tuple[float, float]]]:
+                 **kwargs) -> Union[float, Tuple[float, Tuple[float, float]]]:
     """Return the precision score. Supports micro/binary precision methods.
 
     Parameters
@@ -572,7 +571,7 @@ def f1_score(y_true: List[int],
              average: str = 'micro',
              method: str = 'takahashi',
              compute_ci: bool = True,
-             **kwargs: Unpack[BootstrapParams]) -> Union[float, Tuple[float, Tuple[float, float]]]:
+             **kwargs) -> Union[float, Tuple[float, Tuple[float, float]]]:
     """Compute the F1 score and optionally the confidence interval.
     For non bootstrapping methods, the micro and macro F1 averaging modes, this following the method described in the paper:
     https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8936911/

@@ -4,7 +4,6 @@ from ast import Call
 import statsmodels
 from statsmodels.stats.proportion import proportion_confint
 from typing import List, Callable, Tuple, Union, Optional
-from typing_extensions import Unpack
 from functools import partial
 import numpy as np
 from confidenceinterval.utils import get_positive_negative_counts
@@ -113,7 +112,7 @@ def accuracy_score(y_true: List[int],
                    confidence_level: float = 0.95,
                    method: str = 'wilson',
                    compute_ci: bool = True,
-                   **kwargs: Unpack[BootstrapParams]) -> Union[float, Tuple[float, Tuple[float, float]]]:
+                   **kwargs) -> Union[float, Tuple[float, Tuple[float, float]]]:
     """
         Compute the accuracy score and optionally the confidence interval.
         Parameters
@@ -188,7 +187,7 @@ def ppv_score(y_true: List[int],
               confidence_level: float = 0.95,
               method: str = 'wilson',
               compute_ci: bool = True,
-              **kwargs: Unpack[BootstrapParams]) -> Union[float, Tuple[float, Tuple[float, float]]]:
+              **kwargs) -> Union[float, Tuple[float, Tuple[float, float]]]:
     if method in bootstrap_methods:
         return ppv_score_bootstrap(
             y_true, y_pred, confidence_level, method, **kwargs)
@@ -243,7 +242,7 @@ def npv_score(y_true: List[int],
               confidence_level: float = 0.95,
               method: str = 'wilson',
               compute_ci: bool = True,
-              **kwargs: Unpack[BootstrapParams]) -> Union[float, Tuple[float, Tuple[float, float]]]:
+              **kwargs) -> Union[float, Tuple[float, Tuple[float, float]]]:
     if method in bootstrap_methods:
         return npv_score_bootstrap(
             y_true, y_pred, confidence_level, method, **kwargs)
@@ -298,7 +297,7 @@ def tpr_score(y_true: List[int],
               confidence_level: float = 0.95,
               method: str = 'wilson',
               compute_ci: bool = True,
-              **kwargs: Unpack[BootstrapParams]) -> Union[float, Tuple[float, Tuple[float, float]]]:
+              **kwargs) -> Union[float, Tuple[float, Tuple[float, float]]]:
     if method in bootstrap_methods:
         return tpr_score_bootstrap(
             y_true, y_pred, confidence_level, method, **kwargs)
@@ -353,7 +352,7 @@ def fpr_score(y_true: List[int],
               confidence_level: float = 0.95,
               method: str = 'wilson',
               compute_ci: bool = True,
-              **kwargs: Unpack[BootstrapParams]) -> Union[float, Tuple[float, Tuple[float, float]]]:
+              **kwargs) -> Union[float, Tuple[float, Tuple[float, float]]]:
     if method in bootstrap_methods:
         return fpr_score_bootstrap(
             y_true=y_true, y_pred=y_pred, confidence_level=confidence_level, method=method, **kwargs)
@@ -408,7 +407,7 @@ def tnr_score(y_true: List[int],
               confidence_level: float = 0.95,
               method: str = 'wilson',
               compute_ci: bool = True,
-              **kwargs: Unpack[BootstrapParams]) -> Union[float, Tuple[float, Tuple[float, float]]]:
+              **kwargs) -> Union[float, Tuple[float, Tuple[float, float]]]:
     if method in bootstrap_methods:
         return tnr_score_bootstrap(
             y_true=y_true, y_pred=y_pred, confidence_level=confidence_level, method=method, **kwargs)

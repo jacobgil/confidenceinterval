@@ -2,4 +2,3 @@ statsmodels
 scikit-learn
 scipy
 numpy
-typing_extensions
