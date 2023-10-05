@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Callable, List, Tuple
+from typing import Callable, List, Tuple, Optional
 from .delong import delong_roc_variance
 import sklearn.metrics
 from scipy.stats import norm
