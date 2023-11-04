@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Callable, List, Tuple
+from typing import Callable, List, Tuple, Optional
 from .delong import delong_roc_variance
 import sklearn.metrics
 from scipy.stats import norm
@@ -12,10 +12,14 @@ def roc_auc_score_bootstrap(y_true: List,
                             confidence_level: float = 0.95,
                             method: str = 'bootstrap_bca',
                             n_resamples: int = 9999,
-                            random_state: Callable = None) -> Tuple[float, float]:
+                            random_state: Callable = None,
+                            average: str = 'macro',
+                            multi_class: str = 'raise',
+                            labels: Optional[List] = None) -> Tuple[float, float]:
     return bootstrap_ci(y_true=y_true,
                         y_pred=y_pred,
-                        metric=sklearn.metrics.roc_auc_score,
+                        metric=lambda y1, y2: sklearn.metrics.roc_auc_score(y1, y2, 
+                        average=average, multi_class=multi_class, labels=labels),
                         confidence_level=confidence_level,
                         n_resamples=n_resamples,
                         method=method,
