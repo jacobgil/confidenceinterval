@@ -121,6 +121,50 @@ By default method='wilson', the wilson interval, which behaves better for smalle
 
 method can be one of ['wilson', 'normal', 'agresti_coull', 'beta', 'jeffreys', 'binom_test'], or one of the boostrap methods.
 
+## Get a Classification Report
+The [classification_report.py](confidenceinterval%2Fclassification_report.py) function builds a text report showing the main classification metrics and their confidence intervals.
+Each class will be first treated as a binary classification problem, the default CI for P and R used being Wilson, and Takahashi-binary for F1. Then the 
+micro and macro multi-class metric will be calculated using the Takahashi-methods.
+
+```python
+from confidenceinterval import classification_report_with_ci
+
+y_true = [0, 1, 2, 2, 2, 1, 1, 1, 0, 2, 2, 1, 0, 2, 2, 1, 2, 2, 1, 1]
+y_pred = [0, 1, 0, 0, 2, 1, 1, 1, 0, 2, 2, 1, 0, 1, 2, 1, 2, 2, 1, 1]
+
+classification_report_with_ci(y_true, y_pred)
+
+     Class  Precision  Recall  F1-Score    Precision CI       Recall CI     F1-Score CI  Support
+0  Class 0      0.600   1.000     0.750  (0.231, 0.882)    (0.439, 1.0)  (0.408, 1.092)        3
+1  Class 1      0.889   1.000     0.941   (0.565, 0.98)    (0.676, 1.0)  (0.796, 1.086)        8
+2  Class 2      1.000   0.667     0.800     (0.61, 1.0)  (0.354, 0.879)  (0.562, 1.038)        9
+3    micro      0.850   0.850     0.850  (0.694, 1.006)  (0.694, 1.006)  (0.694, 1.006)       20
+4    macro      0.830   0.889     0.830  (0.702, 0.958)  (0.775, 1.002)  (0.548, 1.113)       20
+```
+You can also provide a custom mapping for the class names, as well as modify the binary CI method and rounding.
+```python
+from confidenceinterval import classification_report_with_ci
+
+y_true = [0, 1, 2, 2, 2, 1, 1, 1, 0, 2, 2, 1, 0, 2, 2, 1, 2, 2, 1, 1]
+y_pred = [0, 1, 0, 0, 2, 1, 1, 1, 0, 2, 2, 1, 0, 1, 2, 1, 2, 2, 1, 1]
+
+numerical_to_label = {
+    0: "Cherries",
+    1: "Olives",
+    2: "Tangerines"
+}
+
+classification_report_with_ci(y_true, y_pred, round_ndigits=2, numerical_to_label_map = numerical_to_label, binary_method='wilson')
+
+        Class  Precision  Recall  F1-Score  Precision CI     Recall CI   F1-Score CI  Support
+0    Cherries       0.60    1.00      0.75  (0.23, 0.88)   (0.44, 1.0)  (0.41, 1.09)        3
+1      Olives       0.89    1.00      0.94  (0.57, 0.98)   (0.68, 1.0)   (0.8, 1.09)        8
+2  Tangerines       1.00    0.67      0.80   (0.61, 1.0)  (0.35, 0.88)  (0.56, 1.04)        9
+3       micro       0.85    0.85      0.85  (0.69, 1.01)  (0.69, 1.01)  (0.69, 1.01)       20
+4       macro       0.83    0.89      0.83   (0.7, 0.96)   (0.78, 1.0)  (0.55, 1.11)       20
+```
+
+
 ## Get a confidence interval for any custom metric with Bootstrapping
 With the bootstrap_ci method, you can get the CI for any metric function that gets y_true and y_pred as arguments.
 

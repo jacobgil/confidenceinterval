@@ -11,3 +11,5 @@ from confidenceinterval.takahashi_methods import precision_score, \
     recall_score, \
     f1_score
 from confidenceinterval.auc import roc_auc_score
+
+from confidenceinterval.classification_report import classification_report_with_ci
