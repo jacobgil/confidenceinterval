@@ -141,7 +141,7 @@ classification_report_with_ci(y_true, y_pred)
 3    micro      0.850   0.850     0.850  (0.694, 1.006)  (0.694, 1.006)  (0.694, 1.006)       20
 4    macro      0.830   0.889     0.830  (0.702, 0.958)  (0.775, 1.002)  (0.548, 1.113)       20
 ```
-You can also provide a custom mapping for the class names and the rounding numbers.
+You can also provide a custom mapping for the class names, as well as modify the binary CI method and rounding.
 ```python
 from confidenceinterval import classification_report_with_ci
 
@@ -154,7 +154,7 @@ numerical_to_label = {
     2: "Tangerines"
 }
 
-classification_report_with_ci(y_true, y_pred, round_ndigits=2, numerical_to_label_map = numerical_to_label)
+classification_report_with_ci(y_true, y_pred, round_ndigits=2, numerical_to_label_map = numerical_to_label, binary_method='wilson')
 
         Class  Precision  Recall  F1-Score  Precision CI     Recall CI   F1-Score CI  Support
 0    Cherries       0.60    1.00      0.75  (0.23, 0.88)   (0.44, 1.0)  (0.41, 1.09)        3
