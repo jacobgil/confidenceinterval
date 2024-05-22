@@ -190,7 +190,7 @@ def calc_pvalue(aucs, sigma):
 
 def compute_ground_truth_statistics(ground_truth, sample_weight):
     assert np.array_equal(np.unique(ground_truth), [0, 1])
-    order = (-ground_truth).argsort()
+    order = (~ground_truth).argsort()
     label_1_count = int(ground_truth.sum())
     if sample_weight is None:
         ordered_sample_weight = None
