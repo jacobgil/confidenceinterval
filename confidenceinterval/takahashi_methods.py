@@ -85,14 +85,15 @@ def precision_score_takahashi(y_true: List[int],
 
         if compute_ci:
             # The variance
-            derivative = np.diag((1 - P_i) / len(p))
+            derivative = np.diag(
+                (1 - P_i) / (len(p) * total_detected_as_each_category))
             for i in range(len(p)):
                 indices = [j for j in range(len(p)) if i != j]
                 derivative[indices, i] -= P_i[i] / \
                     (len(p) * total_detected_as_each_category[i])
             p = p.flatten()
             derivative = derivative.flatten()
-            variance = np.diag(p) - p * p.transpose()
+            variance = np.diag(p) - np.outer(p, p)
 
             delta_method_variance = derivative.transpose().dot(variance).dot(derivative)
             delta_method_variance = delta_method_variance / len(y_true)
@@ -268,14 +269,15 @@ def recall_score_takahashi(y_true: List[int],
 
         if compute_ci:
             # The variance
-            derivative = np.diag((1 - R_i) / len(p))
+            derivative = np.diag(
+                (1 - R_i) / (len(p) * total_from_each_category))
             for i in range(len(p)):
                 indices = [j for j in range(len(p)) if i != j]
                 derivative[i, indices] -= R_i[i] / \
                     (len(p) * total_from_each_category[i])
             p = p.flatten()
             derivative = derivative.flatten()
-            variance = np.diag(p) - p * p.transpose()
+            variance = np.diag(p) - np.outer(p, p)
 
             delta_method_variance = derivative.transpose().dot(variance).dot(derivative)
             delta_method_variance = delta_method_variance / len(y_true)
@@ -421,9 +423,8 @@ def binary_f1_score_takahashi(y_true: List[int],
     if compute_ci:
         derivative = np.array(
             [0, -f1 / denom, -f1 / denom, 2 * (1 - f1) / denom])
-        derivative = np.float32(derivative)
         p = p.flatten()
-        variance = np.diag(p) - p * p.transpose()
+        variance = np.diag(p) - np.outer(p, p)
         delta_method_variance = derivative.transpose().dot(variance).dot(derivative)
         delta_method_variance = delta_method_variance / len(y_true)
 
@@ -466,16 +467,20 @@ def macro_f1_score_takahashi(y_true: List[int],
         # Breaking down the equation for Var(MACROF1) in 3.2
         # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8936911/#APP1
 
-        a = (TP + FP + TP + FN - 2 * TP)
-        b = (TP + FP + TP + FN + 1e-7)
-        first_term = f1i * a / (b**2) + (f1i / 2 + a / b)
+        # Takahashi et al. (2022), eq. for Var(maF1), with cell
+        # proportions p_ij (not counts):
+        # a_i = p_i. + p_.i - 2 p_ii, b_i = p_i. + p_.i
+        n = CM.sum()
+        a = (FP + FN) / n
+        b = (TP + FP + TP + FN) / n + 1e-7
+        first_term = f1i * a / (b**2) * (f1i / 2 + a / b)
 
         second_term = 0
         for i in range(CM.shape[0]):
             for j in range(CM.shape[1]):
                 if i == j:
                     continue
-                second_term += CM[j][i] * f1i[i] * f1i[j] / (b[i] + b[j])
+                second_term += (CM[j][i] / n) * f1i[i] * f1i[j] / (b[i] * b[j])
 
         variance = 2 * (first_term.sum() + second_term) / (len(f1i) ** 2)
         variance = variance / len(y_true)
