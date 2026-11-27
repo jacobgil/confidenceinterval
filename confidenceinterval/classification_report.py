@@ -58,8 +58,10 @@ def classification_report_with_ci(y_true: List[int], y_pred: List[int],
         y_pred_binary = [1 if y == class_ else 0 for y in y_pred]
 
         # Calculate metrics
-        precision, precision_ci = precision_score(y_true_binary, y_pred_binary, average='binary', method=binary_method)
-        recall, recall_ci = recall_score(y_true_binary, y_pred_binary, average='binary', method=binary_method)
+        precision, precision_ci = precision_score(y_true_binary, y_pred_binary, confidence_level=confidence_level,
+                                                  average='binary', method=binary_method)
+        recall, recall_ci = recall_score(y_true_binary, y_pred_binary, confidence_level=confidence_level,
+                                         average='binary', method=binary_method)
         binary_f1, binary_f1_ci = f1_score(y_true_binary, y_pred_binary, confidence_level=confidence_level, average='binary')
 
         class_name = numerical_to_label_map[class_] if (
@@ -79,14 +81,14 @@ def classification_report_with_ci(y_true: List[int], y_pred: List[int],
             'Support': support
         })
 
-    precision_micro, p_ci_micro = precision_score(y_true, y_pred, average='micro')
-    precision_macro, p_ci_macro = precision_score(y_true, y_pred, average='macro')
+    precision_micro, p_ci_micro = precision_score(y_true, y_pred, confidence_level=confidence_level, average='micro')
+    precision_macro, p_ci_macro = precision_score(y_true, y_pred, confidence_level=confidence_level, average='macro')
 
-    recall_micro, r_ci_micro = recall_score(y_true, y_pred, average='micro')
-    recall_macro, r_ci_macro = recall_score(y_true, y_pred, average='macro')
+    recall_micro, r_ci_micro = recall_score(y_true, y_pred, confidence_level=confidence_level, average='micro')
+    recall_macro, r_ci_macro = recall_score(y_true, y_pred, confidence_level=confidence_level, average='macro')
 
-    f1_micro, f1_ci_micro = f1_score(y_true, y_pred, average='micro')
-    f1_macro, f1_ci_macro = f1_score(y_true, y_pred, average='macro')
+    f1_micro, f1_ci_micro = f1_score(y_true, y_pred, confidence_level=confidence_level, average='micro')
+    f1_macro, f1_ci_macro = f1_score(y_true, y_pred, confidence_level=confidence_level, average='macro')
 
     data.append({
         'Class': 'micro',
